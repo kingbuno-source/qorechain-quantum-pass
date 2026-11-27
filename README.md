@@ -13,7 +13,7 @@ Every transaction from this app is signed twice:
 
 The validators check both signatures. The transaction carries a
 `PQCHybridSignature` extension and the chain emits a `pqc_hybrid_verify`
-event with status `verified`. This project:
+event. This project:
 
 1. Scaffolds a Hardhat project with a `Counter` contract.
 2. Registers the account's ML-DSA-87 key on chain (one time).
@@ -76,19 +76,28 @@ pnpm verify <TX_HASH>
 ```
 
 It prints the result code, the ML-DSA-87 signature size in the
-`PQCHybridSignature` extension, and the `pqc_hybrid_verify` event status.
-It exits 0 only when the code is 0 and the status is `verified`.
+`PQCHybridSignature` extension, and whether the `pqc_hybrid_verify` event
+is present. It exits 0 only when the code is 0 and the event is present
+(this chain version carries no `status` attribute on the event).
 
 You can also check the transaction in the explorer at
 https://explore.qore.network (switch to Testnet, search for the hash).
 
 ## Proof (on-chain)
 
-_Pending: filled in after the testnet run below._
+Run on Nov 27, 2026 on the QoreChain testnet (`qorechain-diana`).
 
-- Window-open (hybrid) transaction: _pending_
-- Contract deployed at: _pending_
-- `pqc_hybrid_verify` status: _pending_
+- Faucet claim (100 QOR, block #10846889): `3E983115D562BE72F793188052CFF38D745DEA7F3138F02BB573A98B0425DDAB`
+- PQC key registration: `B7C6C125838B2861DFE60DCB2D762E446499257FDD39B44AF11351D2A1520871`
+- Window-open (hybrid) transaction: `54280F4CE8F82486AFD322398C2A6DE2614FE718D4A7926FDD3862C3E8BA852F`
+  - code `0` (success), 64-byte secp256k1 signature, 4627-byte ML-DSA-87
+    signature in the `PQCHybridSignature` extension
+  - `pqc_hybrid_verify`: verified (event present on the transaction)
+- Contract deployed at: `0x4a35396a67Dc3c7afb97fe883C55bD57b28C2B0E`
+  (block #10857215, deploy tx `0x58b25d650192c8789f5831b6ed47ac275b9738a36327a5239aa714fece67e75c`)
+
+Verify it yourself with `pnpm verify 54280F4CE8F82486AFD322398C2A6DE2614FE718D4A7926FDD3862C3E8BA852F`,
+or look the hashes up at https://explore.qore.network (switch to Testnet).
 
 ## Project layout
 
